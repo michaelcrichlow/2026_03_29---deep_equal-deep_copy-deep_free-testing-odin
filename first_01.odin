@@ -191,9 +191,12 @@ run_thorough_tests :: proc() {
 
     // now the innermost []any has been updated: [1, 2, 3] --> [100, 200, 300]
     print(c_inner_00) // [100, 200, 300]
+    print("-------------------------------------------\n")
 
-    // print("\n source:", source)
-    // print("\n cloned:", cloned)
+    print("---- `source` and `cloned` after updates ----")
+    print("\n source:", source)
+    print("\n cloned:", cloned)
+    print("")
 
     diff_result := !deep_equal(source, cloned)
     print("Test 2 (Independence):", diff_result ? "PASSED" : "FAILED")
@@ -214,7 +217,7 @@ run_thorough_tests :: proc() {
     slice_eq := deep_equal(any_a, any_b)
     print("Test 4 (Robust []int Comparison):", slice_eq ? "PASSED" : "FAILED")
 
-    print("--- TEST SUITE COMPLETE ---")
+    print("--- TEST SUITE COMPLETE ---\n")
 }
 
 /*
@@ -225,8 +228,8 @@ Action: Deep Copying source...
 Test 1 (Equality): PASSED
 Action: Modifying clone...
 ---- The Addresses of both `source` and `cloned` ----
-Source Data Ptr: 0x3939AF250
-Clone Data Ptr:  0x12CD891AF08
+Source Data Ptr: 0x858A9CEFE0
+Clone Data Ptr:  0x1B37389AF08
 
  source: [Person{name = "Alice", age = 30, Friends = ["Bob", "Charlie"], address = Address{street = "123 Main St", city = "Springfield", state = "IL", zip = 62704, is_work = false}}, ["apple", [true, [4.5678, [5, [1, 2, 3]]]]]]
 
@@ -235,10 +238,19 @@ Clone Data Ptr:  0x12CD891AF08
 -------------------------------------------
 [1, 2, 3]
 [100, 200, 300]
+-------------------------------------------
+
+---- `source` and `cloned` after updates ----
+
+ source: [Person{name = "Alice", age = 30, Friends = ["Bob", "Charlie"], address = Address{street = "123 Main St", city = "Springfield", state = "IL", zip = 62704, is_work = false}}, ["apple", [true, [4.5678, [5, [1, 2, 3]]]]]]
+
+ cloned: [Person{name = "Malice", age = 300, Friends = ["Bob", "Charlie"], address = Address{street = "123 Main St", city = "Springfield", state = "IL", zip = 62704, is_work = false}}, ["apple", [true, [4.5678, [5, [100, 200, 300]]]]]]
+
 Test 2 (Independence): PASSED
 Test 3 (Source Integrity): PASSED - Source name remains 'Alice'
 Test 4 (Robust []int Comparison): PASSED
 --- TEST SUITE COMPLETE ---
+
 ---- ENTERING deep_free_slice() -----
 ---- ENTERING deep_free_any() -----
 ---- ENTERING deep_free_Person() -----
@@ -263,5 +275,5 @@ Test 4 (Robust []int Comparison): PASSED
 ---- ENTERING deep_free_any() -----
 ---- ENTERING deep_free_any() -----
 ---- ENTERING deep_free_any() -----
-Odin took: 1.3446ms
+Odin took: 1.7192ms
 */
